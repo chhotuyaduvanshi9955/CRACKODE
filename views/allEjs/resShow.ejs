@@ -1,0 +1,12 @@
+
+<%layout("/layouts/boilerplate") %> 
+<% allrestaurants.forEach(r => { %>
+  <div class="card">
+    <img src="<%= r.image %>" alt="<%= r.name %>" width="250">
+    <h3><%= r.name %></h3>
+    <p><%= r.city %></p>
+    <p><%= r.cuisine %></p>
+    <p> <%= r.rating %></p>
+    <a href="/restaurant/<%= r.id %>">View</a>
+  </div>
+<% }) %>
