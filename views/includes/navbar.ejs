@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>navbar</title>
-</head>
 <style>
 .navbar {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -43,6 +36,13 @@
 
 .search-engine {
     width: auto;
+    position: relative;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .form-control {
@@ -50,27 +50,44 @@
     border-radius: 25px;
     padding: 8px 15px;
     background: rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
 }
 
 .form-control:focus {
     background: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    outline: none;
 }
 
 .btn-outline-search {
-    background-color: #fe424d;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%);
     color: white;
     border: none;
-    border-radius: 25px;
-    padding: 0 1.5rem;
-    margin-left: 5px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 11px 18px;
+    margin-left: 8px;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    font-size: 0.95rem;
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+    letter-spacing: 0.5px;
 }
 
 .btn-outline-search:hover {
-    background-color: #e03a41;
-    box-shadow: 0 4px 10px rgba(254, 66, 77, 0.3);
+    background: linear-gradient(135deg, #FF5252 0%, #FF6B5B 100%);
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.35);
+    transform: translateY(-3px);
+}
+
+.btn-outline-search:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
 }
 
 .navbar-toggler {
@@ -103,6 +120,130 @@
     border-color: rgba(255,255,255,0.2);
 }
 
+/* User Profile Icon Styling */
+.user-profile-link {
+    font-size: 1.3rem !important;
+    padding: 0.5rem 0.5rem !important;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    min-width: 40px;
+    height: 40px;
+}
+
+.user-profile-link:hover {
+    transform: scale(1.15);
+    text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+/* Shopping Cart Icon Styling */
+.cart-link {
+    position: relative;
+    font-size: 1.3rem !important;
+    padding: 0.5rem 0.75rem !important;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    min-width: 45px;
+    height: 40px;
+}
+
+.cart-link:hover {
+    transform: scale(1.15);
+    text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    background: #fe424d;
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Autocomplete Dropdown */
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 45px;
+    background: white;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 12px 15px;
+    color: #333;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background-color: #f5f5f5;
+    padding-left: 20px;
+}
+
+.autocomplete-item-type {
+    display: inline-block;
+    background: #667eea;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.autocomplete-item-type.city {
+    background: #667eea;
+}
+
+.autocomplete-item-type.restaurant {
+    background: #764ba2;
+}
+
+.autocomplete-item-type.cuisine {
+    background: #fe424d;
+}
+
+.autocomplete-item-text {
+    flex-grow: 1;
+    color: #333;
+    font-weight: 500;
+}
+
 @media (max-width: 992px) {
     .search-engine {
         margin-top: 10px;
@@ -111,6 +252,31 @@
     
     .form-control {
         width: 100%;
+    }
+
+    .autocomplete-dropdown {
+        right: 0;
+        position: fixed;
+        top: auto;
+        left: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .search-wrapper {
+        width: 100%;
+    }
+
+    .form-control {
+        width: calc(100% - 45px);
+    }
+
+    .btn-outline-search {
+        margin-left: 8px;
+        padding: 11px 18px;
+        min-width: 48px;
+        min-height: 48px;
+        font-size: 0.95rem;
     }
 }
 </style>
@@ -124,14 +290,22 @@
     <a href="/home" class="navbar-brand">RestroHub</a>
     
     <!-- search engine -->
-   <div class="search-engine ms-auto me-3">
-    <form class="d-flex" role="search">
-      <input class="form-control" type="search" placeholder="Search restaurants..." aria-label="Search"/>
-      <button class="btn btn-outline-search" type="submit">
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
-   </div>
+    <div class="search-engine ms-auto me-3">
+        <div class="search-wrapper">
+            <input 
+                class="form-control" 
+                type="search" 
+                id="searchInput"
+                placeholder="Search by city, restaurant, or cuisine..." 
+                aria-label="Search"
+                autocomplete="off"
+            />
+            <button class="btn btn-outline-search" id="searchBtn" type="button">
+                <i class="fas fa-search"></i>
+            </button>
+            <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+        </div>
+    </div>
    
     <!-- button -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,6 +325,9 @@
           <a class="nav-link" href="/restaurants"><i class="fas fa-utensils"></i> Restaurants</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/location-search"><i class="fas fa-map-location-dot"></i> Near Me</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/service"><i class="fas fa-concierge-bell"></i> Services</a>
         </li>
         <li class="nav-item">
@@ -159,26 +336,678 @@
         <li class="nav-item">
           <a class="nav-link" href="/contact"><i class="fas fa-phone"></i> Contact</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
-        </li>
+        
+        <!-- Shopping Cart (Only for logged in users) -->
+        <% if(user) { %>
+          <li class="nav-item">
+            <a class="nav-link cart-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas" title="Shopping Cart">
+              <i class="fas fa-shopping-cart fa-lg"></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </a>
+          </li>
+        <% } %>
+        
+        <!-- User Profile / Login -->
+        <% if(user) { %>
+          <!-- Logged In User -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle user-profile-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="<%= user.name %>">
+              <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+               <li><span class="dropdown-item-text" style="font-weight: bold;"><%= user.name %></span></li>
+               <li><hr class="dropdown-divider"></li>
+               <li><a class="dropdown-item" href="/profile"><i class="fas fa-id-card"></i> Profile</a></li>
+               <li><a class="dropdown-item" href="/my-bookings"><i class="fas fa-calendar-check"></i> My Bookings</a></li>
+               <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+               <li><hr class="dropdown-divider"></li>
+               <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <!-- Not Logged In -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle user-profile-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="User Account">
+              <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+               <li><a class="dropdown-item" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+               <li><a class="dropdown-item" href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            </ul>
+          </li>
+        <% } %>
       
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fas fa-bars"></i> More
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-             <li><a class="dropdown-item" href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
-              <li><a class="dropdown-item" href="/feedback"><i class="fas fa-comments"></i> Feedback</a></li>
+             <li><a class="dropdown-item" href="/feedback"><i class="fas fa-comments"></i> Feedback</a></li>
                <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
           </ul>
         </li>
       </ul>
     </div>
   </div>
  
-  </nav>
-</body>
+</nav>
 
-</html>
+<!-- Shopping Cart Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="cartOffcanvasLabel">
+      <i class="fas fa-shopping-cart"></i> Shopping Cart
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div id="cartContainer">
+      <div class="empty-cart">
+        <i class="fas fa-shopping-basket"></i>
+        <p>Your cart is empty</p>
+        <p style="font-size: 0.9rem; color: #999;">Add items to get started!</p>
+      </div>
+    </div>
+  </div>
+  <div class="offcanvas-footer">
+    <div id="cartSummary" style="display: none;">
+      <div class="coupon-section">
+        <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+          <input type="text" id="couponCode" placeholder="Enter coupon code" class="form-control" style="font-size: 0.9rem;">
+          <button class="btn btn-secondary" onclick="applyCoupon()" style="font-size: 0.9rem;">Apply</button>
+        </div>
+      </div>
+      <div class="cart-totals">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span id="subtotal">₹0</span>
+        </div>
+        <div class="total-row" id="discountRow" style="display: none; color: #28a745;">
+          <span>Discount:</span>
+          <span id="discount">-₹0</span>
+        </div>
+        <div class="total-row final-total">
+          <span>Total:</span>
+          <span id="total">₹0</span>
+        </div>
+      </div>
+      <button class="btn btn-primary w-100" onclick="proceedToCheckout()" style="margin-top: 15px;">
+        <i class="fas fa-credit-card"></i> Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .offcanvas-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom: 2px solid #667eea;
+  }
+
+  .offcanvas-header .btn-close {
+    filter: brightness(0) invert(1);
+  }
+
+  .offcanvas-title {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .offcanvas-body {
+    padding: 0;
+  }
+
+  #cartContainer {
+    padding: 20px;
+    min-height: 300px;
+  }
+
+  .empty-cart {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+  }
+
+  .empty-cart i {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .empty-cart p {
+    margin: 0;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+  }
+
+  .cart-item-image {
+    width: 80px;
+    height: 80px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .cart-item-details {
+    flex: 1;
+  }
+
+  .cart-item-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .cart-item-price {
+    color: #667eea;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .qty-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  .qty-btn:hover {
+    background: #f5f5f5;
+    border-color: #667eea;
+  }
+
+  .qty-value {
+    width: 35px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px 0;
+    font-size: 0.85rem;
+  }
+
+  .cart-item-remove {
+    color: #fe424d;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  .cart-item-remove:hover {
+    text-decoration: underline;
+  }
+
+  .offcanvas-footer {
+    border-top: 2px solid #f0f0f0;
+    padding: 20px;
+    background: #fafafa;
+  }
+
+  .coupon-section {
+    margin-bottom: 20px;
+  }
+
+  .cart-totals {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #666;
+  }
+
+  .total-row span {
+    flex: 1;
+  }
+
+  .total-row span:last-child {
+    text-align: right;
+  }
+
+  .final-total {
+    border-top: 2px solid #eee;
+    padding-top: 10px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 576px) {
+    .offcanvas {
+      width: 100% !important;
+    }
+
+    .cart-item {
+      flex-wrap: wrap;
+    }
+
+    .cart-item-details {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+let debounceTimer = null;
+let selectedIndex = -1;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+
+    // Input event for autocomplete
+    searchInput.addEventListener('input', function(e) {
+        clearTimeout(debounceTimer);
+        const query = e.target.value.trim();
+        selectedIndex = -1;
+
+        if (query.length === 0) {
+            autocompleteDropdown.classList.remove('show');
+            autocompleteDropdown.innerHTML = '';
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetchSuggestions(query);
+        }, 200);
+    });
+
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+        const items = autocompleteDropdown.querySelectorAll('.autocomplete-item');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            updateSelection(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelection(items);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedIndex >= 0 && items[selectedIndex]) {
+                selectSuggestion(items[selectedIndex].dataset.value);
+            } else {
+                performSearch();
+            }
+        } else if (e.key === 'Escape') {
+            autocompleteDropdown.classList.remove('show');
+        }
+    });
+
+    // Search button click
+    searchBtn.addEventListener('click', performSearch);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-engine')) {
+            autocompleteDropdown.classList.remove('show');
+        }
+    });
+
+    function performSearch() {
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            window.location.href = `/search?q=${encodeURIComponent(query)}`;
+        }
+    }
+});
+
+function fetchSuggestions(query) {
+    console.log('Fetching suggestions for:', query);
+    fetch(`/api/search/autocomplete?q=${encodeURIComponent(query)}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+            console.log('API Response:', data);
+            
+            if (data.success && data.suggestions && data.suggestions.length > 0) {
+                autocompleteDropdown.innerHTML = data.suggestions.map((suggestion, index) => `
+                    <div class="autocomplete-item" data-value="${suggestion.value}" onclick="selectSuggestion('${suggestion.value.replace(/'/g, "\\'")}')">
+                        <span class="autocomplete-item-type ${suggestion.type}">${suggestion.type}</span>
+                        <span class="autocomplete-item-text">${escapeHtml(suggestion.value)}</span>
+                    </div>
+                `).join('');
+                autocompleteDropdown.classList.add('show');
+            } else {
+                // Show sample suggestions if no matches
+                autocompleteDropdown.innerHTML = `
+                    <div class="autocomplete-item" onclick="selectSuggestion('Delhi')">
+                        <span class="autocomplete-item-type city">city</span>
+                        <span class="autocomplete-item-text">Delhi (Try this)</span>
+                    </div>
+                    <div class="autocomplete-item" onclick="selectSuggestion('Mumbai')">
+                        <span class="autocomplete-item-type city">city</span>
+                        <span class="autocomplete-item-text">Mumbai (Try this)</span>
+                    </div>
+                    <div class="autocomplete-item" onclick="selectSuggestion('Bangalore')">
+                        <span class="autocomplete-item-type city">city</span>
+                        <span class="autocomplete-item-text">Bangalore (Try this)</span>
+                    </div>
+                `;
+                autocompleteDropdown.classList.add('show');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching suggestions:', error);
+            const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+            autocompleteDropdown.innerHTML = '';
+            autocompleteDropdown.classList.remove('show');
+        });
+}
+
+function selectSuggestion(value) {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = value;
+    document.getElementById('autocompleteDropdown').classList.remove('show');
+    window.location.href = `/search?q=${encodeURIComponent(value)}`;
+}
+
+function updateSelection(items) {
+    items.forEach((item, index) => {
+        if (index === selectedIndex) {
+            item.style.backgroundColor = '#f0f0f0';
+            item.style.paddingLeft = '20px';
+        } else {
+            item.style.backgroundColor = '';
+            item.style.paddingLeft = '';
+        }
+    });
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Shopping Cart Functions
+let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+let appliedCoupon = JSON.parse(localStorage.getItem('appliedCoupon')) || null;
+
+// Initialize cart on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartUI();
+});
+
+// Update cart display
+function updateCartUI() {
+    const cartContainer = document.getElementById('cartContainer');
+    const cartSummary = document.getElementById('cartSummary');
+    const cartBadge = document.getElementById('cartBadge');
+    
+    if (cart.length === 0) {
+        cartContainer.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Your cart is empty</p>
+                <p style="font-size: 0.9rem; color: #999;">Add items to get started!</p>
+            </div>
+        `;
+        cartSummary.style.display = 'none';
+        cartBadge.textContent = '0';
+    } else {
+        let cartHTML = '';
+        cart.forEach((item, index) => {
+            cartHTML += `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        ${item.emoji || '🍕'}
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${escapeHtml(item.name)}</div>
+                        <div class="cart-item-price">₹${item.price}</div>
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                            <input type="number" class="qty-value" value="${item.quantity}" readonly>
+                            <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                        <span class="cart-item-remove" onclick="removeItem(${index})">
+                            <i class="fas fa-trash"></i> Remove
+                        </span>
+                    </div>
+                </div>
+            `;
+        });
+        cartContainer.innerHTML = cartHTML;
+        cartSummary.style.display = 'block';
+        cartBadge.textContent = cart.length;
+        
+        updateCartTotals();
+    }
+}
+
+// Add item to cart
+function addToCart(name, price, emoji = '🍕') {
+    const existingItem = cart.find(item => item.name === name);
+    
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            name,
+            price,
+            emoji,
+            quantity: 1
+        });
+    }
+    
+    localStorage.setItem('userCart', JSON.stringify(cart));
+    updateCartUI();
+    
+    // Show success message
+    showCartNotification(`${name} added to cart!`);
+}
+
+// Update item quantity
+function updateQuantity(index, change) {
+    if (cart[index]) {
+        cart[index].quantity += change;
+        
+        if (cart[index].quantity <= 0) {
+            removeItem(index);
+        } else {
+            localStorage.setItem('userCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+    }
+}
+
+// Remove item from cart
+function removeItem(index) {
+    if (cart[index]) {
+        const itemName = cart[index].name;
+        cart.splice(index, 1);
+        localStorage.setItem('userCart', JSON.stringify(cart));
+        updateCartUI();
+        showCartNotification(`${itemName} removed from cart`);
+    }
+}
+
+// Update cart totals
+function updateCartTotals() {
+    let subtotal = 0;
+    cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+    
+    let discount = 0;
+    if (appliedCoupon) {
+        discount = (subtotal * appliedCoupon.discount) / 100;
+    }
+    
+    const total = subtotal - discount;
+    
+    document.getElementById('subtotal').textContent = `₹${subtotal}`;
+    document.getElementById('total').textContent = `₹${total}`;
+    
+    const discountRow = document.getElementById('discountRow');
+    if (discount > 0) {
+        discountRow.style.display = 'flex';
+        document.getElementById('discount').textContent = `-₹${discount.toFixed(2)}`;
+    } else {
+        discountRow.style.display = 'none';
+    }
+}
+
+// Apply coupon
+function applyCoupon() {
+    const couponCode = document.getElementById('couponCode').value.trim().toUpperCase();
+    
+    if (!couponCode) {
+        alert('Please enter a coupon code');
+        return;
+    }
+    
+    // Sample coupons
+    const coupons = {
+        'SAVE10': { discount: 10, name: 'Save 10%' },
+        'SAVE20': { discount: 20, name: 'Save 20%' },
+        'WELCOME': { discount: 15, name: 'Welcome Offer' },
+        'SPECIAL': { discount: 25, name: 'Special Discount' }
+    };
+    
+    if (coupons[couponCode]) {
+        appliedCoupon = coupons[couponCode];
+        localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupon));
+        updateCartTotals();
+        showCartNotification(`Coupon ${couponCode} applied! ${appliedCoupon.discount}% off`);
+        document.getElementById('couponCode').value = '';
+    } else {
+        alert('Invalid coupon code');
+    }
+}
+
+// Proceed to checkout
+function proceedToCheckout() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    let discount = 0;
+    if (appliedCoupon) {
+        discount = (subtotal * appliedCoupon.discount) / 100;
+    }
+    const total = subtotal - discount;
+    
+    const orderSummary = {
+        items: cart,
+        subtotal,
+        discount,
+        total,
+        coupon: appliedCoupon,
+        timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
+    
+    // Save order to user orders
+    let userOrders = JSON.parse(localStorage.getItem('userOrders')) || [];
+    userOrders.push(orderSummary);
+    localStorage.setItem('userOrders', JSON.stringify(userOrders));
+    
+    alert(`Order placed!\nTotal: ₹${total}\nThank you for your order!`);
+    
+    // Clear cart after successful checkout
+    cart = [];
+    appliedCoupon = null;
+    localStorage.removeItem('userCart');
+    localStorage.removeItem('appliedCoupon');
+    updateCartUI();
+    
+    // Close the offcanvas
+    const offcanvas = document.getElementById('cartOffcanvas');
+    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+    if (bsOffcanvas) {
+        bsOffcanvas.hide();
+    }
+}
+
+// Show cart notification
+function showCartNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+</script>
+
+<style>
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+</style>
+</body>

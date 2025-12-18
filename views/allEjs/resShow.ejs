@@ -2,47 +2,206 @@
 
 <div class="restaurants-section">
     <div class="restaurants-hero">
-        <h1>Our Restaurants</h1>
+        <h1>Restaurant Hub</h1>
         <p class="lead">Discover the finest dining experiences</p>
     </div>
 
-    <div class="restaurants-content">
-        <% if(allrestaurants && allrestaurants.length > 0) { %>
-            <div class="row g-4 mt-4">
-                <% allrestaurants.forEach(r => { %>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="restaurant-card">
-                            <div class="restaurant-image">
-                                <img src="<%= r.img %>" alt="<%= r.name %>">
-                                <div class="rating-badge">
-                                    <i class="fas fa-star"></i> <%= r.rating %>
+    <!-- Filter Section (For all users) -->
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" id="searchFilter" class="form-control" placeholder="Search restaurants...">
+            </div>
+            <div class="col-md-3">
+                <select id="cuisineFilter" class="form-select">
+                    <option value="">All Cuisines</option>
+                    <option value="Indian">Indian</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Continental">Continental</option>
+                    <option value="Seafood">Seafood</option>
+                    <option value="Fast Food">Fast Food</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="cityFilter" class="form-select">
+                    <option value="">All Cities</option>
+                    <option value="New Delhi">New Delhi</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Bangalore">Bangalore</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Chennai">Chennai</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs for Restaurants / Orders -->
+    <% if(user) { %>
+        <div class="restaurant-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <%= !showOrders ? 'active' : '' %>" id="restaurants-tab" data-bs-toggle="tab" data-bs-target="#restaurants" type="button" role="tab" aria-controls="restaurants" aria-selected="<%= !showOrders %>">
+                        <i class="fas fa-utensils"></i> Restaurants (<%= allrestaurants ? allrestaurants.length : 0 %>)
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <%= showOrders ? 'active' : '' %>" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="<%= showOrders %>">
+                        <i class="fas fa-receipt"></i> My Orders
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites" type="button" role="tab" aria-controls="favorites" aria-selected="false">
+                        <i class="fas fa-heart"></i> Favorites
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <!-- Restaurants Tab -->
+            <div class="tab-pane fade <%= !showOrders ? 'show active' : '' %>" id="restaurants" role="tabpanel" aria-labelledby="restaurants-tab">
+                <div class="restaurants-content">
+                    <% 
+                        let restaurants = allrestaurants && allrestaurants.length > 0 ? allrestaurants : [];
+                    %>
+                    
+                    <% if(restaurants && restaurants.length > 0) { %>
+                        <div class="row g-4 mt-4">
+                            <% restaurants.forEach(r => { %>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="restaurant-card">
+                                        <div class="restaurant-image">
+                                            <img src="<%= r.img %>" alt="<%= r.name %>">
+                                            <div class="rating-badge">
+                                                <i class="fas fa-star"></i> <%= r.rating %>
+                                            </div>
+                                        </div>
+                                        <div class="restaurant-content">
+                                            <h3><%= r.name %></h3>
+                                            <div class="restaurant-details">
+                                                <p class="cuisine"><i class="fas fa-utensils"></i> <%= r.cuisine %></p>
+                                                <p class="location"><i class="fas fa-map-pin"></i> <%= r.city %></p>
+                                                <p class="description"><%= r.description %></p>
+                                            </div>
+                                            <div class="restaurant-footer">
+                                                <div class="footer-left">
+                                                    <span class="price-range">
+                                                        <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
+                                                        <span style="margin-left: 8px; font-weight: 500; color: #666;">
+                                                            <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="footer-right">
+                                                    <button class="btn-favorite" onclick="toggleFavorite(<%= r._id %>, '<%= r.name %>')" data-id="<%= r._id %>">
+                                                        <i class="far fa-heart"></i>
+                                                    </button>
+                                                    <a href="/booking/<%= r._id %>" class="btn btn-sm btn-primary" title="Book Table">
+                                                        <i class="fas fa-calendar-check"></i> Book
+                                                    </a>
+                                                    <a href="/restaurant-details/<%= r._id %>" class="btn btn-sm btn-info">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="restaurant-content">
-                                <h3><%= r.name %></h3>
-                                <div class="restaurant-details">
-                                    <p class="cuisine"><i class="fas fa-utensils"></i> <%= r.cuisine %></p>
-                                    <p class="location"><i class="fas fa-map-pin"></i> <%= r.city %></p>
-                                    <p class="description"><%= r.description %></p>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                            <h3 style="color: #999; margin: 20px 0;">No Restaurants Found</h3>
+                            <p style="color: #bbb;">We couldn't find any restaurants. Please try refreshing the page or try searching.</p>
+                            <a href="/restaurants" class="btn btn-primary mt-3">Refresh</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div class="tab-pane fade <%= showOrders ? 'show active' : '' %>" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                <div class="orders-container">
+                    <div id="ordersList"></div>
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+                <div class="favorites-container">
+                    <div id="favoritesList"></div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <!-- Not logged in - show all restaurants directly -->
+        <div class="restaurants-content" style="margin-top: 30px;">
+            <% 
+                let restaurants = allrestaurants && allrestaurants.length > 0 ? allrestaurants : [];
+            %>
+            
+            <% if(restaurants && restaurants.length > 0) { %>
+                <div class="row g-4 mt-4">
+                    <% restaurants.forEach(r => { %>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="restaurant-card">
+                                <div class="restaurant-image">
+                                    <img src="<%= r.img %>" alt="<%= r.name %>">
+                                    <div class="rating-badge">
+                                        <i class="fas fa-star"></i> <%= r.rating %>
+                                    </div>
                                 </div>
-                                <div class="restaurant-footer">
-                                    <span class="price-range">
-                                        <% for(let i = 0; i < r.priceRange; i++) { %>
-                                            ₹
-                                        <% } %>
-                                    </span>
-                                    <a href="/restaurant/<%= r._id %>" class="btn btn-sm btn-danger">View Details</a>
+                                <div class="restaurant-content">
+                                    <h3><%= r.name %></h3>
+                                    <div class="restaurant-details">
+                                        <p class="cuisine"><i class="fas fa-utensils"></i> <%= r.cuisine %></p>
+                                        <p class="location"><i class="fas fa-map-pin"></i> <%= r.city %></p>
+                                        <p class="description"><%= r.description %></p>
+                                    </div>
+                                    <div class="restaurant-footer">
+                                        <div class="footer-left">
+                                            <span class="price-range">
+                                                <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
+                                                <span style="margin-left: 8px; font-weight: 500; color: #666;">
+                                                    <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="footer-right">
+                                            <button class="btn-favorite" onclick="toggleFavorite(<%= r._id %>, '<%= r.name %>')" data-id="<%= r._id %>">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                            <a href="/booking/<%= r._id %>" class="btn btn-sm btn-primary" title="Book Table">
+                                                <i class="fas fa-calendar-check"></i> Book
+                                            </a>
+                                            <a href="/restaurant-details/<%= r._id %>" class="btn btn-sm btn-info">View Details</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <% }) %>
-            </div>
-        <% } else { %>
-            <div class="alert alert-info mt-4">No restaurants found</div>
-        <% } %>
-    </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                    <h3 style="color: #999; margin: 20px 0;">No Restaurants Found</h3>
+                    <p style="color: #bbb;">We couldn't find any restaurants. Please try refreshing the page or try searching.</p>
+                    <a href="/restaurants" class="btn btn-primary mt-3">Refresh</a>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+    <!-- End of if(user) -->
 </div>
+<!-- End of restaurants-section -->
 
 <style>
     .restaurants-hero {
@@ -170,6 +329,9 @@
         font-size: 1.1rem;
         color: #fe424d;
         font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
     }
     
     .btn-danger {
@@ -183,4 +345,377 @@
         background-color: #e03a41;
         border-color: #e03a41;
     }
+
+    /* Tabs Styling */
+    .restaurant-tabs {
+        margin: 30px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-tabs {
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .nav-tabs .nav-link {
+        color: #666;
+        font-weight: 500;
+        border: none;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: #667eea;
+        color: #667eea;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+        background: none;
+    }
+
+    /* Favorite Button */
+    .btn-favorite {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.3rem;
+        color: #ddd;
+        transition: all 0.2s ease;
+        padding: 0;
+        margin-right: 10px;
+    }
+
+    .btn-favorite:hover,
+    .btn-favorite.active {
+        color: #fe424d;
+        transform: scale(1.2);
+    }
+
+    /* Footer Layout */
+    .footer-left {
+        flex: 1;
+    }
+
+    .footer-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Orders Container */
+    .orders-container,
+    .favorites-container {
+        padding: 30px 0;
+        min-height: 400px;
+    }
+
+    .order-card,
+    .favorite-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover,
+    .favorite-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-completed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-state p {
+        color: #999;
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .restaurants-hero h1 {
+            font-size: 2rem;
+        }
+
+        .nav-tabs {
+            flex-wrap: wrap;
+        }
+
+        .nav-tabs .nav-link {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+
+        .footer-right {
+            flex-direction: column;
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .btn-favorite {
+            margin-right: 0;
+        }
+    }
 </style>
+
+<script>
+// Initialize favorites and orders from localStorage
+let favorites = JSON.parse(localStorage.getItem('restaurantFavorites')) || [];
+let orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+
+// Toggle favorite
+function toggleFavorite(id, name) {
+    const idString = String(id);
+    const button = document.querySelector(`.btn-favorite[data-id="${idString}"]`);
+    const isFavorite = favorites.some(fav => String(fav.id) === idString);
+    
+    if (isFavorite) {
+        favorites = favorites.filter(fav => String(fav.id) !== idString);
+        if (button) {
+            button.innerHTML = '<i class="far fa-heart"></i>';
+            button.classList.remove('active');
+        }
+    } else {
+        favorites.push({ id: idString, name });
+        if (button) {
+            button.innerHTML = '<i class="fas fa-heart"></i>';
+            button.classList.add('active');
+        }
+    }
+    
+    localStorage.setItem('restaurantFavorites', JSON.stringify(favorites));
+    updateFavoritesUI();
+}
+
+// Update favorites tab
+function updateFavoritesUI() {
+    const favoritesList = document.getElementById('favoritesList');
+    
+    if (favorites.length === 0) {
+        favoritesList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-heart-broken"></i>
+                <p>No favorite restaurants yet</p>
+                <p style="font-size: 0.9rem; color: #bbb;">Click the heart icon to add restaurants to your favorites</p>
+            </div>
+        `;
+    } else {
+        favoritesList.innerHTML = favorites.map(fav => `
+            <div class="favorite-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h5 style="margin: 0 0 5px 0;">${fav.name}</h5>
+                        <small style="color: #999;">Added to favorites</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeFavorite(${fav.id})">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+// Remove favorite
+function removeFavorite(id) {
+    const idString = String(id);
+    favorites = favorites.filter(fav => String(fav.id) !== idString);
+    localStorage.setItem('restaurantFavorites', JSON.stringify(favorites));
+    const button = document.querySelector(`.btn-favorite[data-id="${idString}"]`);
+    if (button) {
+        button.innerHTML = '<i class="far fa-heart"></i>';
+        button.classList.remove('active');
+    }
+    updateFavoritesUI();
+}
+
+// Update orders tab
+function updateOrdersUI() {
+    const ordersList = document.getElementById('ordersList');
+    
+    if (orders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-box"></i>
+                <p>No orders yet</p>
+                <p style="font-size: 0.9rem; color: #bbb;">Your orders will appear here after you checkout</p>
+            </div>
+        `;
+    } else {
+        ordersList.innerHTML = orders.map((order, index) => `
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <h5 style="margin: 0; color: #333;">Order #${1000 + index + 1}</h5>
+                        <small style="color: #999;">${new Date(order.timestamp).toLocaleDateString()}</small>
+                    </div>
+                    <span class="order-status status-completed">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <p style="margin: 5px 0;"><strong>Total:</strong> ₹${order.total}</p>
+                    <p style="margin: 5px 0;"><strong>Items:</strong> ${order.items.length} item(s)</p>
+                </div>
+                <button class="btn btn-sm btn-outline-primary" onclick="reorderItems(${index})">
+                    <i class="fas fa-redo"></i> Reorder
+                </button>
+            </div>
+        `).join('');
+    }
+}
+
+// Reorder items
+function reorderItems(orderIndex) {
+    const order = orders[orderIndex];
+    if (order && order.items) {
+        order.items.forEach(item => {
+            addToCart(item.name, item.price, item.emoji);
+        });
+        alert('Items added to cart! You can now proceed to checkout.');
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Mark favorites as active
+    favorites.forEach(fav => {
+        const idString = String(fav.id);
+        const button = document.querySelector(`.btn-favorite[data-id="${idString}"]`);
+        if (button) {
+            button.innerHTML = '<i class="fas fa-heart"></i>';
+            button.classList.add('active');
+        }
+    });
+    
+    // Update UI
+    updateFavoritesUI();
+    updateOrdersUI();
+    
+    // Listen for order updates
+    window.addEventListener('storage', function() {
+        orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+        updateOrdersUI();
+    });
+});
+
+// Filter functionality
+function applyFilters() {
+    const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+    const cuisineFilter = document.getElementById('cuisineFilter').value;
+    const cityFilter = document.getElementById('cityFilter').value;
+    
+    const restaurantCards = document.querySelectorAll('.restaurant-card');
+    let visibleCount = 0;
+    
+    restaurantCards.forEach(card => {
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        const cuisine = card.querySelector('.cuisine').textContent;
+        const location = card.querySelector('.location').textContent;
+        
+        let matches = true;
+        
+        // Check search term
+        if (searchTerm && !name.includes(searchTerm)) {
+            matches = false;
+        }
+        
+        // Check cuisine
+        if (cuisineFilter && !cuisine.includes(cuisineFilter)) {
+            matches = false;
+        }
+        
+        // Check city
+        if (cityFilter && !location.includes(cityFilter)) {
+            matches = false;
+        }
+        
+        // Show or hide card
+        if (matches) {
+            card.parentElement.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.parentElement.style.display = 'none';
+        }
+    });
+    
+    // Show message if no results
+    if (visibleCount === 0) {
+        const container = document.querySelector('.row.g-4');
+        if (!document.querySelector('.no-results-msg')) {
+            const message = document.createElement('div');
+            message.className = 'no-results-msg col-12';
+            message.innerHTML = '<div class="alert alert-info text-center"><i class="fas fa-search"></i> No restaurants match your filters. Try adjusting your criteria.</div>';
+            container.appendChild(message);
+        }
+    } else {
+        // Remove no results message if it exists
+        const noResultsMsg = document.querySelector('.no-results-msg');
+        if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    }
+}
+
+// Clear filters
+function clearFilters() {
+    document.getElementById('searchFilter').value = '';
+    document.getElementById('cuisineFilter').value = '';
+    document.getElementById('cityFilter').value = '';
+    
+    document.querySelectorAll('.restaurant-card').forEach(card => {
+        card.parentElement.style.display = 'block';
+    });
+    
+    const noResultsMsg = document.querySelector('.no-results-msg');
+    if (noResultsMsg) {
+        noResultsMsg.remove();
+    }
+}
+
+// Search as you type
+document.getElementById('searchFilter')?.addEventListener('keyup', applyFilters);
+</script>
+

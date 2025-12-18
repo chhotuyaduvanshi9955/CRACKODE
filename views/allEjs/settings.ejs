@@ -1,0 +1,902 @@
+<%layout("/layouts/boilerplate") %>
+
+<style>
+    * {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+        background-color: #ffffff;
+        color: #333;
+    }
+
+    body.dark-mode {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+
+    .settings-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    .settings-sidebar {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 20px;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+    }
+
+    body.dark-mode .settings-sidebar {
+        background: #2a2a2a;
+    }
+
+    .settings-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #333;
+    }
+
+    body.dark-mode .settings-title {
+        color: #fff;
+    }
+
+    .settings-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .settings-menu li {
+        margin-bottom: 10px;
+    }
+
+    .settings-menu a {
+        display: block;
+        padding: 12px 15px;
+        color: #666;
+        text-decoration: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    body.dark-mode .settings-menu a {
+        color: #ccc;
+    }
+
+    .settings-menu a:hover {
+        background: #e8e8e8;
+        border-left-color: #667eea;
+        color: #333;
+    }
+
+    body.dark-mode .settings-menu a:hover {
+        background: #3a3a3a;
+        color: #fff;
+    }
+
+    .settings-menu a.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-left-color: #667eea;
+    }
+
+    .settings-content {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 40px;
+    }
+
+    body.dark-mode .settings-content {
+        background: #2a2a2a;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .setting-section {
+        margin-bottom: 40px;
+        display: none;
+    }
+
+    .setting-section.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #667eea;
+        color: #333;
+    }
+
+    body.dark-mode .section-title {
+        color: #fff;
+        border-bottom-color: #764ba2;
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        margin-bottom: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+    }
+
+    body.dark-mode .setting-item {
+        background: #3a3a3a;
+        border-left-color: #764ba2;
+    }
+
+    .setting-item-label {
+        flex: 1;
+    }
+
+    .setting-item-label h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    body.dark-mode .setting-item-label h4 {
+        color: #fff;
+    }
+
+    .setting-item-label p {
+        margin: 0;
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    body.dark-mode .setting-item-label p {
+        color: #aaa;
+    }
+
+    .setting-item-control {
+        margin-left: 20px;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+    }
+
+    .toggle-switch input {
+        display: none;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        cursor: pointer;
+        border-radius: 14px;
+        transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #667eea;
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+    }
+
+    /* Select Dropdown */
+    .settings-select {
+        padding: 10px 15px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        background: white;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .settings-select {
+        background: #3a3a3a;
+        color: #fff;
+        border-color: #555;
+    }
+
+    .settings-select:hover {
+        border-color: #667eea;
+    }
+
+    .settings-select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Buttons */
+    .btn-save {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-save:active {
+        transform: translateY(0);
+    }
+
+    .btn-reset {
+        background: #f9f9f9;
+        color: #666;
+        border: 2px solid #ddd;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 10px;
+    }
+
+    body.dark-mode .btn-reset {
+        background: #3a3a3a;
+        color: #ccc;
+        border-color: #555;
+    }
+
+    .btn-reset:hover {
+        border-color: #667eea;
+        color: #667eea;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        display: none;
+        border-left: 4px solid #28a745;
+    }
+
+    body.dark-mode .success-message {
+        background: #2d5a2d;
+        color: #b3e6b3;
+    }
+
+    .success-message.show {
+        display: block;
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .settings-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .settings-sidebar {
+            position: relative;
+            top: 0;
+        }
+
+        .settings-menu {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .settings-menu li {
+            margin-bottom: 0;
+            min-width: 150px;
+        }
+
+        .settings-menu a {
+            text-align: center;
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+    }
+
+    .navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    body.dark-mode .navbar {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%) !important;
+    }
+</style>
+
+<div class="settings-wrapper">
+    <!-- Sidebar Menu -->
+    <div class="settings-sidebar">
+        <h3 class="settings-title">Settings</h3>
+        <ul class="settings-menu">
+            <li><a href="#" class="menu-link active" data-section="appearance"><i class="fas fa-palette"></i> Appearance</a></li>
+            <li><a href="#" class="menu-link" data-section="notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="#" class="menu-link" data-section="privacy"><i class="fas fa-lock"></i> Privacy</a></li>
+            <li><a href="#" class="menu-link" data-section="account"><i class="fas fa-user-cog"></i> Account</a></li>
+            <li><a href="#" class="menu-link" data-section="general"><i class="fas fa-sliders-h"></i> General</a></li>
+        </ul>
+    </div>
+
+    <!-- Content Area -->
+    <div class="settings-content">
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Settings saved successfully!
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="setting-section active" id="appearance">
+            <h2 class="section-title"><i class="fas fa-palette"></i> Appearance</h2>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Dark Mode</h4>
+                    <p>Enable dark theme for better viewing in low light</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Theme Color</h4>
+                    <p>Choose your preferred accent color</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="themeColor">
+                        <option value="default">Purple (Default)</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="red">Red</option>
+                        <option value="orange">Orange</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Font Size</h4>
+                    <p>Adjust text size for better readability</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="fontSize">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium (Default)</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="saveAppearanceSettings()">Save Changes</button>
+                <button class="btn-reset" onclick="resetAppearanceSettings()">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Notifications Settings -->
+        <div class="setting-section" id="notifications">
+            <h2 class="section-title"><i class="fas fa-bell"></i> Notifications</h2>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Email Notifications</h4>
+                    <p>Receive email alerts for important updates</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="emailNotif" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Restaurant Updates</h4>
+                    <p>Get notified about new restaurants and menu changes</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="restaurantNotif" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Promotional Offers</h4>
+                    <p>Receive special deals and promotional offers</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="promoNotif">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Notification Frequency</h4>
+                    <p>How often would you like to receive notifications?</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="notifFrequency">
+                        <option value="instant">Instant</option>
+                        <option value="daily" selected>Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="saveNotificationSettings()">Save Changes</button>
+                <button class="btn-reset" onclick="resetNotificationSettings()">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="setting-section" id="privacy">
+            <h2 class="section-title"><i class="fas fa-lock"></i> Privacy & Security</h2>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Profile Visibility</h4>
+                    <p>Control who can see your profile</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="profileVisibility">
+                        <option value="private">Private</option>
+                        <option value="friends" selected>Friends Only</option>
+                        <option value="public">Public</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Show Activity Status</h4>
+                    <p>Let others see when you're online</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="activityStatus" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Data Collection</h4>
+                    <p>Allow us to collect usage data to improve services</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dataCollection" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Search History</h4>
+                    <p>Clear your search history</p>
+                </div>
+                <div class="setting-item-control">
+                    <button class="btn-reset" onclick="clearSearchHistory()">Clear History</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="savePrivacySettings()">Save Changes</button>
+                <button class="btn-reset" onclick="resetPrivacySettings()">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="setting-section" id="account">
+            <h2 class="section-title"><i class="fas fa-user-cog"></i> Account Settings</h2>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Language</h4>
+                    <p>Choose your preferred language</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="language">
+                        <option value="en" selected>English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="hi">Hindi</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Timezone</h4>
+                    <p>Set your timezone for accurate time display</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="timezone">
+                        <option value="ist">IST (India)</option>
+                        <option value="utc">UTC</option>
+                        <option value="pst">PST (US Pacific)</option>
+                        <option value="cst">CST (US Central)</option>
+                        <option value="est">EST (US Eastern)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Two-Factor Authentication</h4>
+                    <p>Add an extra layer of security to your account</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="twoFactorAuth">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="saveAccountSettings()">Save Changes</button>
+                <button class="btn-reset" onclick="resetAccountSettings()">Reset to Default</button>
+            </div>
+        </div>
+
+        <!-- General Settings -->
+        <div class="setting-section" id="general">
+            <h2 class="section-title"><i class="fas fa-sliders-h"></i> General Settings</h2>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Auto-Save</h4>
+                    <p>Automatically save your preferences</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoSave" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Remember Search History</h4>
+                    <p>Keep track of your previous searches</p>
+                </div>
+                <div class="setting-item-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="rememberHistory" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Default View</h4>
+                    <p>Choose how to view restaurant listings</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="defaultView">
+                        <option value="grid" selected>Grid View</option>
+                        <option value="list">List View</option>
+                        <option value="map">Map View</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-item-label">
+                    <h4>Items Per Page</h4>
+                    <p>Number of items to display per page</p>
+                </div>
+                <div class="setting-item-control">
+                    <select class="settings-select" id="itemsPerPage">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-save" onclick="saveGeneralSettings()">Save Changes</button>
+                <button class="btn-reset" onclick="resetGeneralSettings()">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load settings from localStorage on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSettings();
+        applySettings();
+        setupMenuListeners();
+    });
+
+    // Setup menu click listeners
+    function setupMenuListeners() {
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.setting-section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link and corresponding section
+                this.classList.add('active');
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+    }
+
+    // Load settings from localStorage
+    function loadSettings() {
+        const settings = localStorage.getItem('appSettings');
+        if (settings) {
+            const parsed = JSON.parse(settings);
+            
+            // Appearance
+            document.getElementById('darkModeToggle').checked = parsed.darkMode || false;
+            document.getElementById('themeColor').value = parsed.themeColor || 'default';
+            document.getElementById('fontSize').value = parsed.fontSize || 'medium';
+            
+            // Notifications
+            document.getElementById('emailNotif').checked = parsed.emailNotif !== false;
+            document.getElementById('restaurantNotif').checked = parsed.restaurantNotif !== false;
+            document.getElementById('promoNotif').checked = parsed.promoNotif || false;
+            document.getElementById('notifFrequency').value = parsed.notifFrequency || 'daily';
+            
+            // Privacy
+            document.getElementById('profileVisibility').value = parsed.profileVisibility || 'friends';
+            document.getElementById('activityStatus').checked = parsed.activityStatus !== false;
+            document.getElementById('dataCollection').checked = parsed.dataCollection !== false;
+            
+            // Account
+            document.getElementById('language').value = parsed.language || 'en';
+            document.getElementById('timezone').value = parsed.timezone || 'ist';
+            document.getElementById('twoFactorAuth').checked = parsed.twoFactorAuth || false;
+            
+            // General
+            document.getElementById('autoSave').checked = parsed.autoSave !== false;
+            document.getElementById('rememberHistory').checked = parsed.rememberHistory !== false;
+            document.getElementById('defaultView').value = parsed.defaultView || 'grid';
+            document.getElementById('itemsPerPage').value = parsed.itemsPerPage || '20';
+        }
+    }
+
+    // Apply settings to the app
+    function applySettings() {
+        const settings = localStorage.getItem('appSettings');
+        if (settings) {
+            const parsed = JSON.parse(settings);
+            
+            // Apply dark mode
+            if (parsed.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            
+            // Apply font size
+            const fontSizeMap = { small: '14px', medium: '16px', large: '18px' };
+            document.documentElement.style.fontSize = fontSizeMap[parsed.fontSize] || '16px';
+        }
+    }
+
+    // Dark mode toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    });
+
+    // Save appearance settings
+    function saveAppearanceSettings() {
+        const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        settings.darkMode = document.getElementById('darkModeToggle').checked;
+        settings.themeColor = document.getElementById('themeColor').value;
+        settings.fontSize = document.getElementById('fontSize').value;
+        
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        applySettings();
+        showSuccessMessage();
+    }
+
+    // Save notification settings
+    function saveNotificationSettings() {
+        const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        settings.emailNotif = document.getElementById('emailNotif').checked;
+        settings.restaurantNotif = document.getElementById('restaurantNotif').checked;
+        settings.promoNotif = document.getElementById('promoNotif').checked;
+        settings.notifFrequency = document.getElementById('notifFrequency').value;
+        
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        showSuccessMessage();
+    }
+
+    // Save privacy settings
+    function savePrivacySettings() {
+        const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        settings.profileVisibility = document.getElementById('profileVisibility').value;
+        settings.activityStatus = document.getElementById('activityStatus').checked;
+        settings.dataCollection = document.getElementById('dataCollection').checked;
+        
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        showSuccessMessage();
+    }
+
+    // Save account settings
+    function saveAccountSettings() {
+        const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        settings.language = document.getElementById('language').value;
+        settings.timezone = document.getElementById('timezone').value;
+        settings.twoFactorAuth = document.getElementById('twoFactorAuth').checked;
+        
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        showSuccessMessage();
+    }
+
+    // Save general settings
+    function saveGeneralSettings() {
+        const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        settings.autoSave = document.getElementById('autoSave').checked;
+        settings.rememberHistory = document.getElementById('rememberHistory').checked;
+        settings.defaultView = document.getElementById('defaultView').value;
+        settings.itemsPerPage = document.getElementById('itemsPerPage').value;
+        
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        showSuccessMessage();
+    }
+
+    // Reset to defaults
+    function resetAppearanceSettings() {
+        if (confirm('Are you sure you want to reset appearance settings to default?')) {
+            document.getElementById('darkModeToggle').checked = false;
+            document.getElementById('themeColor').value = 'default';
+            document.getElementById('fontSize').value = 'medium';
+            saveAppearanceSettings();
+        }
+    }
+
+    function resetNotificationSettings() {
+        if (confirm('Are you sure you want to reset notification settings to default?')) {
+            document.getElementById('emailNotif').checked = true;
+            document.getElementById('restaurantNotif').checked = true;
+            document.getElementById('promoNotif').checked = false;
+            document.getElementById('notifFrequency').value = 'daily';
+            saveNotificationSettings();
+        }
+    }
+
+    function resetPrivacySettings() {
+        if (confirm('Are you sure you want to reset privacy settings to default?')) {
+            document.getElementById('profileVisibility').value = 'friends';
+            document.getElementById('activityStatus').checked = true;
+            document.getElementById('dataCollection').checked = true;
+            savePrivacySettings();
+        }
+    }
+
+    function resetAccountSettings() {
+        if (confirm('Are you sure you want to reset account settings to default?')) {
+            document.getElementById('language').value = 'en';
+            document.getElementById('timezone').value = 'ist';
+            document.getElementById('twoFactorAuth').checked = false;
+            saveAccountSettings();
+        }
+    }
+
+    function resetGeneralSettings() {
+        if (confirm('Are you sure you want to reset general settings to default?')) {
+            document.getElementById('autoSave').checked = true;
+            document.getElementById('rememberHistory').checked = true;
+            document.getElementById('defaultView').value = 'grid';
+            document.getElementById('itemsPerPage').value = '20';
+            saveGeneralSettings();
+        }
+    }
+
+    // Clear search history
+    function clearSearchHistory() {
+        if (confirm('Are you sure you want to clear your search history?')) {
+            localStorage.removeItem('searchHistory');
+            alert('Search history cleared successfully!');
+        }
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+        const message = document.getElementById('successMessage');
+        message.classList.add('show');
+        setTimeout(() => {
+            message.classList.remove('show');
+        }, 3000);
+    }
+</script>

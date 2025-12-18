@@ -1,0 +1,861 @@
+<%layout("/layouts/boilerplate") %>
+
+<style>
+    .restaurant-details-section {
+        background: #f9f9f9;
+        padding: 40px 0;
+    }
+
+    /* Hero Section */
+    .restaurant-hero {
+        position: relative;
+        height: 400px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    .restaurant-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.7;
+    }
+
+    .restaurant-hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px;
+        color: white;
+    }
+
+    .restaurant-hero-overlay h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+    }
+
+    .restaurant-hero-overlay p {
+        margin: 5px 0;
+        font-size: 1.1rem;
+    }
+
+    /* Info Cards */
+    .restaurant-info-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .info-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .info-card i {
+        font-size: 2rem;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+
+    .info-card h3 {
+        margin: 10px 0 5px 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .info-card p {
+        color: #666;
+        margin: 0;
+    }
+
+    /* Menu & Ordering Section */
+    .menu-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #667eea;
+    }
+
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .menu-item {
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 15px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .menu-item:hover {
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left-color: #764ba2;
+    }
+
+    .menu-item-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+    }
+
+    .menu-item-description {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .menu-item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .menu-item-price {
+        font-weight: bold;
+        color: #fe424d;
+        font-size: 1.2rem;
+    }
+
+    .menu-item-add {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .menu-item-add:hover {
+        background: #764ba2;
+        transform: scale(1.05);
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .review-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: 2px solid #eee;
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+    .stat-box .rating-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-box .rating-label {
+        color: #999;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    .rating-stars {
+        color: #ffc107;
+        font-size: 1.3rem;
+    }
+
+    .review-form {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    .review-form h4 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .star-rating {
+        display: flex;
+        gap: 10px;
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .star {
+        cursor: pointer;
+        color: #ddd;
+        transition: all 0.2s ease;
+    }
+
+    .star:hover,
+    .star.active {
+        color: #ffc107;
+        transform: scale(1.2);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .reviews-list {
+        margin-top: 30px;
+    }
+
+    .review-card {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 10px;
+    }
+
+    .review-author {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .review-rating {
+        color: #ffc107;
+        font-size: 1.1rem;
+    }
+
+    .review-date {
+        color: #999;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    .review-text {
+        color: #555;
+        line-height: 1.6;
+        margin: 10px 0;
+    }
+
+    .no-reviews {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+
+    .no-reviews i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    /* Feedback Section */
+    .feedback-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Sticky Order Summary */
+    .order-summary-sticky {
+        position: sticky;
+        top: 100px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        margin-bottom: 30px;
+    }
+
+    .summary-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9rem;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #667eea;
+    }
+
+    .btn-order-now {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .btn-order-now:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .empty-cart-message {
+        text-align: center;
+        color: #999;
+        padding: 20px 0;
+    }
+
+    @media (max-width: 992px) {
+        .restaurant-hero-overlay h1 {
+            font-size: 1.8rem;
+        }
+
+        .menu-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        .order-summary-sticky {
+            position: relative;
+            top: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .restaurant-hero {
+            height: 250px;
+        }
+
+        .restaurant-hero-overlay {
+            padding: 20px;
+        }
+
+        .restaurant-hero-overlay h1 {
+            font-size: 1.5rem;
+        }
+
+        .menu-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="restaurant-details-section">
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="restaurant-hero">
+            <img src="https://images.unsplash.com/photo-1585521537230-68679ca871d0?w=1200&h=400&fit=crop" alt="Restaurant">
+            <div class="restaurant-hero-overlay">
+                <h1>Taj Indian Kitchen</h1>
+                <p><i class="fas fa-map-pin"></i> New Delhi, India</p>
+                <p><i class="fas fa-phone"></i> +91-XXXX-XXXX-XX</p>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <a href="/booking/<%= restaurantId && restaurantId._id %>" class="btn btn-primary" style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; border: none; cursor: pointer;">
+                        <i class="fas fa-calendar-check"></i> Book Table
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Info Cards -->
+                <div class="restaurant-info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-star"></i>
+                        <h3>4.8</h3>
+                        <p>Rating</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-users"></i>
+                        <h3>2.5K+</h3>
+                        <p>Reviews</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>30-45 min</h3>
+                        <p>Delivery</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-rupee-sign"></i>
+                        <h3>₹₹₹</h3>
+                        <p>Price Range</p>
+                    </div>
+                </div>
+
+                <!-- Menu Section -->
+                <div class="menu-section">
+                    <h2 class="section-title"><i class="fas fa-utensils"></i> Our Menu</h2>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <div class="menu-item-name">🍛 Butter Chicken</div>
+                            <div class="menu-item-description">Tender chicken in creamy tomato sauce</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹320</span>
+                                <button class="menu-item-add" onclick="addToCart('Butter Chicken', 320, '🍛')">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="menu-item-name">🍚 Biryani</div>
+                            <div class="menu-item-description">Fragrant rice with spiced meat</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹280</span>
+                                <button class="menu-item-add" onclick="addToCart('Biryani', 280, '🍚')">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="menu-item-name">🥘 Dal Makhani</div>
+                            <div class="menu-item-description">Creamy black lentils with fenugreek</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹250</span>
+                                <button class="menu-item-add" onclick="addToCart('Dal Makhani', 250, '🥘')">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="menu-item-name">🍗 Tandoori Chicken</div>
+                            <div class="menu-item-description">Marinated and grilled chicken pieces</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹290</span>
+                                <button class="menu-item-add" onclick="addToCart('Tandoori Chicken', 290, '🍗')">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="menu-item-name">🧆 Samosa</div>
+                            <div class="menu-item-description">Crispy fried pastry with potato filling</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹60</span>
+                                <button class="menu-item-add" onclick="addToCart('Samosa', 60, '🧆')">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="menu-item">
+                            <div class="menu-item-name">🧊 Lassi</div>
+                            <div class="menu-item-description">Traditional yogurt-based drink</div>
+                            <div class="menu-item-footer">
+                                <span class="menu-item-price">₹80</span>
+                                <button class="menu-item-add" onclick="addToCart('Lassi', 80, '🧊')">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="reviews-section">
+                    <h2 class="section-title"><i class="fas fa-comments"></i> Reviews & Ratings</h2>
+
+                    <div class="review-stats">
+                        <div class="stat-box">
+                            <div class="rating-number">4.8</div>
+                            <div class="rating-stars">★★★★★</div>
+                            <div class="rating-label">Based on 2,543 reviews</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="rating-number">95%</div>
+                            <div class="rating-label">Would recommend</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="rating-number">2.5K+</div>
+                            <div class="rating-label">Total reviews</div>
+                        </div>
+                    </div>
+
+                    <!-- Review Form -->
+                    <% if(user) { %>
+                        <div class="review-form">
+                            <h4>Share Your Experience</h4>
+                            <div class="form-group">
+                                <label>Your Rating</label>
+                                <div class="star-rating" id="starRating">
+                                    <span class="star" onclick="setRating(1)">★</span>
+                                    <span class="star" onclick="setRating(2)">★</span>
+                                    <span class="star" onclick="setRating(3)">★</span>
+                                    <span class="star" onclick="setRating(4)">★</span>
+                                    <span class="star" onclick="setRating(5)">★</span>
+                                </div>
+                                <input type="hidden" id="selectedRating" value="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="reviewTitle" placeholder="E.g. Amazing food and service!">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Your Review</label>
+                                <textarea id="reviewText" placeholder="Share your experience with this restaurant..."></textarea>
+                            </div>
+
+                            <button class="btn-submit" onclick="submitReview()">Submit Review</button>
+                        </div>
+                    <% } else { %>
+                        <div class="review-form" style="text-align: center; color: #999;">
+                            <p><i class="fas fa-lock"></i> Please <a href="/login" style="color: #667eea;">login</a> to write a review</p>
+                        </div>
+                    <% } %>
+
+                    <!-- Reviews List -->
+                    <div class="reviews-list">
+                        <div id="reviewsList">
+                            <div class="no-reviews">
+                                <i class="fas fa-star"></i>
+                                <p>No reviews yet. Be the first to review!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <h2 class="section-title"><i class="fas fa-feedback"></i> Send Feedback</h2>
+                    
+                    <% if(user) { %>
+                        <div class="review-form">
+                            <div class="form-group">
+                                <label>Feedback Type</label>
+                                <select id="feedbackType">
+                                    <option value="suggestion">Suggestion</option>
+                                    <option value="complaint">Complaint</option>
+                                    <option value="compliment">Compliment</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Your Feedback</label>
+                                <textarea id="feedbackText" placeholder="Tell us what you think..."></textarea>
+                            </div>
+
+                            <button class="btn-submit" onclick="submitFeedback()">Send Feedback</button>
+                        </div>
+                    <% } else { %>
+                        <div class="review-form" style="text-align: center; color: #999;">
+                            <p><i class="fas fa-lock"></i> Please <a href="/login" style="color: #667eea;">login</a> to send feedback</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Sidebar - Order Summary -->
+            <div class="col-lg-4">
+                <div class="order-summary-sticky">
+                    <div class="summary-title">Order Summary</div>
+                    <div id="orderItems"></div>
+                    <div id="emptyCart" class="empty-cart-message">
+                        Your cart is empty
+                    </div>
+                    <div id="orderTotals" style="display: none;">
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="subtotalAmount">₹0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Delivery:</span>
+                            <span>₹50</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Tax:</span>
+                            <span id="taxAmount">₹0</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>Total:</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                    </div>
+                    <button class="btn-order-now" onclick="proceedToCart()" style="display: none;" id="orderBtn">
+                        <i class="fas fa-shopping-cart"></i> Proceed to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Review and Feedback Management
+let reviews = JSON.parse(localStorage.getItem('restaurantReviews')) || [];
+let feedbacks = JSON.parse(localStorage.getItem('restaurantFeedbacks')) || [];
+
+// Set star rating
+function setRating(rating) {
+    document.getElementById('selectedRating').value = rating;
+    const stars = document.querySelectorAll('#starRating .star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+// Submit review
+function submitReview() {
+    const rating = document.getElementById('selectedRating').value;
+    const title = document.getElementById('reviewTitle').value.trim();
+    const text = document.getElementById('reviewText').value.trim();
+
+    if (!rating || rating === '0') {
+        alert('Please select a rating');
+        return;
+    }
+    if (!title) {
+        alert('Please enter a review title');
+        return;
+    }
+    if (!text) {
+        alert('Please enter your review');
+        return;
+    }
+
+    const review = {
+        author: '<%= user ? user.name : "Anonymous" %>',
+        rating: parseInt(rating),
+        title: title,
+        text: text,
+        date: new Date().toISOString()
+    };
+
+    reviews.push(review);
+    localStorage.setItem('restaurantReviews', JSON.stringify(reviews));
+
+    // Clear form
+    document.getElementById('selectedRating').value = '0';
+    document.getElementById('reviewTitle').value = '';
+    document.getElementById('reviewText').value = '';
+    document.querySelectorAll('#starRating .star').forEach(star => star.classList.remove('active'));
+
+    updateReviewsDisplay();
+    alert('Review submitted successfully!');
+}
+
+// Submit feedback
+function submitFeedback() {
+    const type = document.getElementById('feedbackType').value;
+    const text = document.getElementById('feedbackText').value.trim();
+
+    if (!text) {
+        alert('Please enter your feedback');
+        return;
+    }
+
+    const feedback = {
+        author: '<%= user ? user.name : "Anonymous" %>',
+        type: type,
+        text: text,
+        date: new Date().toISOString()
+    };
+
+    feedbacks.push(feedback);
+    localStorage.setItem('restaurantFeedbacks', JSON.stringify(feedbacks));
+
+    // Clear form
+    document.getElementById('feedbackType').value = 'suggestion';
+    document.getElementById('feedbackText').value = '';
+
+    alert('Feedback sent successfully!');
+}
+
+// Update reviews display
+function updateReviewsDisplay() {
+    const reviewsList = document.getElementById('reviewsList');
+
+    if (reviews.length === 0) {
+        reviewsList.innerHTML = `
+            <div class="no-reviews">
+                <i class="fas fa-star"></i>
+                <p>No reviews yet. Be the first to review!</p>
+            </div>
+        `;
+    } else {
+        reviewsList.innerHTML = reviews.map(review => `
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <div class="review-author">${review.author}</div>
+                        <div class="review-date">${new Date(review.date).toLocaleDateString()}</div>
+                    </div>
+                    <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+                </div>
+                <div style="font-weight: 600; color: #667eea; margin: 10px 0;">${review.title}</div>
+                <div class="review-text">${review.text}</div>
+            </div>
+        `).reverse().join('');
+    }
+}
+
+// Update order summary
+function updateOrderSummary() {
+    const cart = JSON.parse(localStorage.getItem('userCart')) || [];
+    const orderItems = document.getElementById('orderItems');
+    const emptyCart = document.getElementById('emptyCart');
+    const orderTotals = document.getElementById('orderTotals');
+    const orderBtn = document.getElementById('orderBtn');
+
+    if (cart.length === 0) {
+        orderItems.innerHTML = '';
+        emptyCart.style.display = 'block';
+        orderTotals.style.display = 'none';
+        orderBtn.style.display = 'none';
+    } else {
+        emptyCart.style.display = 'none';
+        orderTotals.style.display = 'block';
+        orderBtn.style.display = 'block';
+
+        orderItems.innerHTML = cart.map(item => `
+            <div class="summary-item">
+                <span>${item.name} x${item.quantity}</span>
+                <span>₹${item.price * item.quantity}</span>
+            </div>
+        `).join('');
+
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const tax = Math.round(subtotal * 0.05);
+        const total = subtotal + 50 + tax;
+
+        document.getElementById('subtotalAmount').textContent = `₹${subtotal}`;
+        document.getElementById('taxAmount').textContent = `₹${tax}`;
+        document.getElementById('totalAmount').textContent = `₹${total}`;
+    }
+}
+
+// Proceed to cart
+function proceedToCart() {
+    alert('Opening cart...');
+    // Trigger cart offcanvas if available
+    const cartLink = document.querySelector('.cart-link');
+    if (cartLink) {
+        cartLink.click();
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateReviewsDisplay();
+    updateOrderSummary();
+
+    // Listen for cart updates
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'userCart') {
+            updateOrderSummary();
+        }
+        if (e.key === 'restaurantReviews') {
+            reviews = JSON.parse(localStorage.getItem('restaurantReviews')) || [];
+            updateReviewsDisplay();
+        }
+    });
+});
+</script>

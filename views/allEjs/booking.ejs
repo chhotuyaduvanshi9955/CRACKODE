@@ -1,0 +1,512 @@
+<%layout("/layouts/boilerplate") %>
+
+<style>
+    .booking-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .booking-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    .booking-header h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+
+    .booking-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+    }
+
+    .booking-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .booking-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .booking-summary {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        height: fit-content;
+        border: 2px solid #e9ecef;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .restaurant-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #667eea;
+    }
+
+    .restaurant-card h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+    }
+
+    .restaurant-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .restaurant-info span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .restaurant-info i {
+        color: #667eea;
+        width: 16px;
+    }
+
+    .booking-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 20px;
+    }
+
+    .booking-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .booking-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .summary-section {
+        margin-bottom: 25px;
+    }
+
+    .summary-section h4 {
+        font-size: 0.95rem;
+        color: #667eea;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .summary-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #dee2e6;
+        font-size: 0.95rem;
+    }
+
+    .summary-detail:last-child {
+        border-bottom: none;
+    }
+
+    .summary-label {
+        color: #666;
+        font-weight: 500;
+    }
+
+    .summary-value {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .booking-content {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-summary {
+            order: -1;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="booking-container">
+    <div class="booking-header">
+        <h1><i class="fas fa-calendar-check"></i> Reserve Your Table</h1>
+        <p>Make a reservation at <%= restaurant.name %></p>
+    </div>
+
+    <div class="booking-content">
+        <div class="booking-form">
+            <div class="success-message" id="successMessage"></div>
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="bookingForm">
+                <div class="restaurant-card">
+                    <h3><%= restaurant.name %></h3>
+                    <div class="restaurant-info">
+                        <span>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <%= restaurant.city %>
+                        </span>
+                        <span>
+                            <i class="fas fa-utensils"></i>
+                            <%= restaurant.cuisine %>
+                        </span>
+                        <span>
+                            <i class="fas fa-star"></i>
+                            <%= restaurant.rating %>
+                        </span>
+                        <span>
+                            <i class="fas fa-rupee-sign"></i>
+                            <% for(let i = 0; i < restaurant.priceRange; i++) { %>₹<% } %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required
+                        value="<%= user ? user.name : '' %>"
+                        placeholder="Your full name"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        value="<%= user ? user.email : '' %>"
+                        placeholder="your@email.com"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        required
+                        placeholder="+91-XXXXXXXXXX"
+                    />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="guests">Number of Guests *</label>
+                        <select id="guests" name="guests" required>
+                            <option value="">Select number of guests</option>
+                            <% for(let i = 1; i <= 20; i++) { %>
+                                <option value="<%= i %>"><%= i %> <%= i === 1 ? 'guest' : 'guests' %></option>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input 
+                            type="date" 
+                            id="date" 
+                            name="date" 
+                            required
+                            min="<%= new Date().toISOString().split('T')[0] %>"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Time *</label>
+                    <select id="time" name="time" required>
+                        <option value="">Select time</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="specialRequests">Special Requests (Optional)</label>
+                    <textarea 
+                        id="specialRequests" 
+                        name="specialRequests"
+                        placeholder="Any special requests? (e.g., high chair needed, allergies, celebrations)"
+                    ></textarea>
+                </div>
+
+                <input type="hidden" name="restaurantId" value="<%= restaurant._id %>">
+
+                <button type="submit" class="booking-btn">
+                    <i class="fas fa-check-circle"></i> Confirm Booking
+                </button>
+            </form>
+        </div>
+
+        <div class="booking-summary">
+            <div class="summary-section">
+                <h4>Booking Summary</h4>
+                <div class="summary-detail">
+                    <span class="summary-label">Restaurant:</span>
+                    <span class="summary-value"><%= restaurant.name %></span>
+                </div>
+                <div class="summary-detail">
+                    <span class="summary-label">Location:</span>
+                    <span class="summary-value"><%= restaurant.city %></span>
+                </div>
+                <div class="summary-detail">
+                    <span class="summary-label">Cuisine:</span>
+                    <span class="summary-value"><%= restaurant.cuisine %></span>
+                </div>
+                <div class="summary-detail">
+                    <span class="summary-label">Price Range:</span>
+                    <span class="summary-value">
+                        <% for(let i = 0; i < restaurant.priceRange; i++) { %>₹<% } %>
+                    </span>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4>Your Booking</h4>
+                <div class="summary-detail">
+                    <span class="summary-label">Guests:</span>
+                    <span class="summary-value" id="summaryGuests">-</span>
+                </div>
+                <div class="summary-detail">
+                    <span class="summary-label">Date:</span>
+                    <span class="summary-value" id="summaryDate">-</span>
+                </div>
+                <div class="summary-detail">
+                    <span class="summary-label">Time:</span>
+                    <span class="summary-value" id="summaryTime">-</span>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h4>Important Info</h4>
+                <ul style="padding-left: 15px; color: #666; font-size: 0.9rem; line-height: 1.6;">
+                    <li>Please arrive 10 minutes early</li>
+                    <li>Cancellation allowed up to 24 hours before</li>
+                    <li>Confirmation email will be sent to you</li>
+                    <li>Minimum 2 hours seating duration</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('bookingForm');
+    const restaurantId = '<%= restaurant._id %>';
+    const dateInput = document.getElementById('date');
+    const timeSelect = document.getElementById('time');
+    const guestSelect = document.getElementById('guests');
+
+    // Update summary when inputs change
+    document.getElementById('guests').addEventListener('change', updateSummary);
+    document.getElementById('date').addEventListener('change', () => {
+        updateSummary();
+        loadAvailableSlots();
+    });
+    document.getElementById('time').addEventListener('change', updateSummary);
+
+    function updateSummary() {
+        const guests = guestSelect.value || '-';
+        const date = dateInput.value ? new Date(dateInput.value).toLocaleDateString() : '-';
+        const time = timeSelect.value || '-';
+
+        document.getElementById('summaryGuests').textContent = guests;
+        document.getElementById('summaryDate').textContent = date;
+        document.getElementById('summaryTime').textContent = time;
+    }
+
+    async function loadAvailableSlots() {
+        const date = document.getElementById('date').value;
+        if (!date) {
+            timeSelect.innerHTML = '<option value="">Select date first</option>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/booking-slots/${restaurantId}?date=${date}`);
+            const data = await response.json();
+
+            if (data.success && data.availableSlots && data.availableSlots.length > 0) {
+                timeSelect.innerHTML = '<option value="">Select time</option>';
+                data.availableSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    option.textContent = slot;
+                    timeSelect.appendChild(option);
+                });
+            } else {
+                // Fallback to default time slots if API fails
+                const defaultSlots = [
+                    '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM',
+                    '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM', '08:00 PM', '08:30 PM', '09:00 PM'
+                ];
+                timeSelect.innerHTML = '<option value="">Select time</option>';
+                defaultSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    option.textContent = slot;
+                    timeSelect.appendChild(option);
+                });
+            }
+        } catch (err) {
+            console.error('Error loading slots:', err);
+            // Fallback to default time slots
+            const defaultSlots = [
+                '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM',
+                '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM', '08:00 PM', '08:30 PM', '09:00 PM'
+            ];
+            timeSelect.innerHTML = '<option value="">Select time</option>';
+            defaultSlots.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot;
+                option.textContent = slot;
+                timeSelect.appendChild(option);
+            });
+        }
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            restaurantId,
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            guests: parseInt(document.getElementById('guests').value),
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value,
+            specialRequests: document.getElementById('specialRequests').value
+        };
+
+        try {
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById('successMessage').innerHTML = `
+                    <strong>✓ Booking Confirmed!</strong><br/>
+                    Confirmation Code: <strong>${data.booking.confirmationCode}</strong><br/>
+                    <a href="/booking-details/${data.booking.confirmationCode}" style="color: #155724; text-decoration: underline;">View booking details</a>
+                `;
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'none';
+                
+                setTimeout(() => {
+                    window.location.href = `/booking-details/${data.booking.confirmationCode}`;
+                }, 2000);
+            } else {
+                document.getElementById('errorMessage').textContent = data.message;
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        } catch (err) {
+            document.getElementById('errorMessage').textContent = 'Error creating booking. Please try again.';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    });
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+</script>

@@ -1,124 +1,1576 @@
 <%layout("/layouts/boilerplate") %>
 
-<div class="service-section">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .service-page {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    /* Hero Section */
+    .service-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .service-hero::after {
+        content: "";
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: slideInDown 0.8s ease;
+    }
+
+    .service-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .service-hero .lead {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        font-weight: 300;
+        opacity: 0.95;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 30px;
+    }
+
+    .hero-btn {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 0 10px;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Services Grid */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 60px 20px;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px 25px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .service-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .service-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .service-card:hover .service-icon-wrapper {
+        transform: rotate(10deg) scale(1.1);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .service-icon {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .service-card h3 {
+        color: #333;
+        margin: 20px 0 15px 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .service-card p {
+        color: #666;
+        line-height: 1.8;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+    }
+
+    .service-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .service-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Features Section */
+    .features-section {
+        background: white;
+        padding: 60px 20px;
+        margin: 20px 0;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #333;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        margin: 15px auto 0;
+        border-radius: 3px;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .feature-item {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.8rem;
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .feature-content h4 {
+        color: #333;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .feature-content p {
+        color: #666;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    /* Pricing Section */
+    .pricing-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 60px 20px;
+        margin: 0;
+    }
+
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .pricing-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        position: relative;
+        border: 2px solid transparent;
+    }
+
+    .pricing-card.featured {
+        border-color: #667eea;
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .pricing-card.featured:hover {
+        transform: scale(1.05) translateY(-10px);
+    }
+
+    .badge-popular {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .plan-name {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #333;
+        margin: 15px 0;
+    }
+
+    .plan-price {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #667eea;
+        margin: 20px 0;
+    }
+
+    .plan-price span {
+        font-size: 1rem;
+        color: #999;
+        font-weight: 400;
+    }
+
+    .plan-features {
+        list-style: none;
+        margin: 30px 0;
+        text-align: left;
+    }
+
+    .plan-features li {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .plan-features li:last-child {
+        border-bottom: none;
+    }
+
+    .plan-features i {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .plan-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 14px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        font-size: 1rem;
+    }
+
+    .plan-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background: white;
+        padding: 60px 20px;
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        background: #f9f9f9;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question {
+        background: white;
+        padding: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item.active .faq-question {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .faq-icon {
+        transition: transform 0.3s ease;
+        font-size: 1.3rem;
+    }
+
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: #f9f9f9;
+    }
+
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        padding: 20px;
+        background: white;
+    }
+
+    .faq-answer p {
+        color: #666;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+
+    .cta-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-btn {
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid white;
+        font-size: 1rem;
+    }
+
+    .cta-btn.primary {
+        background: white;
+        color: #667eea;
+    }
+
+    .cta-btn.secondary {
+        background: transparent;
+        color: white;
+    }
+
+    .cta-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Stats Section */
+    .stats-section {
+        background: white;
+        padding: 60px 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-top: 40px;
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: #666;
+        font-weight: 600;
+    }
+
+    /* Discovery Modal Styles */
+    .discovery-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .discovery-modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .discovery-modal-content {
+        background: white;
+        border-radius: 20px;
+        max-width: 900px;
+        width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.4s ease;
+    }
+
+    .discovery-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .discovery-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .close-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+        transform: rotate(90deg);
+    }
+
+    .discovery-body {
+        padding: 30px;
+    }
+
+    .filter-section {
+        background: #f9f9f9;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+
+    .filter-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-btn-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .search-btn-group button {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .search-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        flex: 1;
+        min-width: 160px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+    }
+
+    .search-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .reset-btn {
+        background: white;
+        color: #333;
+        border: 2px solid #e0e0e0;
+        min-width: 160px;
+    }
+
+    .reset-btn:hover {
+        background: #f5f5f5;
+        border-color: #d0d0d0;
+        transform: translateY(-2px);
+    }
+
+    .reset-btn:active {
+        transform: translateY(0);
+    }
+
+    .results-section {
+        margin-top: 30px;
+    }
+
+    .results-info {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f0f4ff;
+        border-left: 4px solid #667eea;
+        border-radius: 8px;
+    }
+
+    .discovery-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .discovery-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+    }
+
+    .discovery-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+        border-color: #667eea;
+    }
+
+    .discovery-card-img {
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .discovery-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rating-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffc107;
+        color: #333;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        font-size: 0.85rem;
+    }
+
+    .rating-badge i {
+        font-size: 0.85rem;
+    }
+
+    .discovery-card-body {
+        padding: 20px;
+    }
+
+    .discovery-card h4 {
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .discovery-card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .discovery-card-info-item {
+        font-size: 0.85rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .discovery-card-info-item i {
+        color: #667eea;
+        width: 14px;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .discovery-card-footer {
+        display: flex;
+        gap: 10px;
+    }
+
+    .discovery-card-footer button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+    }
+
+    .btn-details {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        flex: 1;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .btn-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-favorite {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        width: 45px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-favorite:hover {
+        background: #667eea;
+        border-color: #667eea;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .btn-favorite.active {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+
+    .no-results i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .no-results p {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Animations */
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .service-card {
+        animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .service-card:nth-child(3) { animation-delay: 0.3s; }
+    .service-card:nth-child(4) { animation-delay: 0.4s; }
+    .service-card:nth-child(5) { animation-delay: 0.5s; }
+    .service-card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .service-hero h1 {
+            font-size: 2rem;
+        }
+
+        .service-hero .lead {
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+        }
+
+        .pricing-card.featured {
+            transform: scale(1);
+        }
+
+        .pricing-card.featured:hover {
+            transform: translateY(-10px);
+        }
+
+        .cta-title {
+            font-size: 1.8rem;
+        }
+
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pricing-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+
+        .hero-btn {
+            margin: 5px;
+        }
+    }
+</style>
+
+<div class="service-page">
+    <!-- Hero Section -->
     <div class="service-hero">
-        <h1>Our Services</h1>
-        <p class="lead">Everything you need for a perfect dining experience</p>
+        <div class="hero-content">
+            <h1>Our Services</h1>
+            <p class="lead">Premium dining experiences at your fingertips</p>
+            <p class="hero-subtitle">Discover, review, and order from the best restaurants in your area</p>
+            <div>
+                <button class="hero-btn" onclick="document.querySelector('.services-grid').scrollIntoView({ behavior: 'smooth' })">
+                    Explore Services
+                </button>
+                <button class="hero-btn" onclick="window.location.href='/restaurants'" style="background: transparent; color: white; border: 2px solid white;">
+                    Browse Restaurants
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="service-content">
-        <div class="row mt-5">
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
+    <!-- Main Services -->
+    <div class="container-lg" style="padding: 0; max-width: 1200px; margin: 0 auto;">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-search service-icon"></i>
+                </div>
+                <h3>Restaurant Discovery</h3>
+                <p>Browse thousands of restaurants across your city. Filter by cuisine, location, price range, and ratings to find your perfect dining destination.</p>
+                <button class="service-btn" onclick="openDiscoveryModal()">Learn More</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-star service-icon"></i>
+                </div>
+                <h3>Ratings & Reviews</h3>
+                <p>Read authentic reviews from fellow diners. Share your own experience with detailed feedback and ratings to help others discover great food.</p>
+                <button class="service-btn">Learn More</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-calendar-check service-icon"></i>
+                </div>
+                <h3>Easy Reservations</h3>
+                <p>Book your table in advance with just a few clicks. Choose your preferred time, date, and party size with instant confirmation.</p>
+                <button class="service-btn">Learn More</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-tags service-icon"></i>
+                </div>
+                <h3>Exclusive Offers</h3>
+                <p>Get special discounts and exclusive deals from partner restaurants. Save big while enjoying premium dining experiences.</p>
+                <button class="service-btn">Learn More</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-headset service-icon"></i>
+                </div>
+                <h3>24/7 Customer Support</h3>
+                <p>Our dedicated support team is available round the clock to help you with any questions, issues, or special requests.</p>
+                <button class="service-btn">Learn More</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">
+                    <i class="fas fa-location-dot service-icon"></i>
+                </div>
+                <h3>Location-Based Search</h3>
+                <p>Find restaurants near you instantly. Get real-time directions, hours of operation, and contact information easily.</p>
+                <button class="service-btn">Learn More</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="container-lg" style="padding: 0; max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Lightning Fast</h4>
+                        <p>Get instant access to restaurant information, menus, and reviews without any delays.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>100% Secure</h4>
+                        <p>Your personal data and payment information are protected with enterprise-grade security.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Community Driven</h4>
+                        <p>Join thousands of food enthusiasts sharing authentic reviews and recommendations.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Mobile Optimized</h4>
+                        <p>Seamless experience on all devices - desktop, tablet, and smartphone.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Exclusive Rewards</h4>
+                        <p>Earn loyalty points on every order and reservation you make with us.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Smart Analytics</h4>
+                        <p>Get personalized recommendations based on your dining preferences and history.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div class="pricing-section">
+        <div class="container-lg" style="padding: 0; max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title" style="color: #333;">Simple Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h4 class="plan-name">Basic</h4>
+                    <div class="plan-price">Free<span>/forever</span></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Browse restaurants</li>
+                        <li><i class="fas fa-check"></i> Read reviews</li>
+                        <li><i class="fas fa-check"></i> Save favorites</li>
+                        <li><i class="fas fa-times" style="color: #ccc;"></i> Advanced filters</li>
+                        <li><i class="fas fa-times" style="color: #ccc;"></i> Exclusive deals</li>
+                    </ul>
+                    <button class="plan-btn">Get Started</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <span class="badge-popular">MOST POPULAR</span>
+                    <h4 class="plan-name">Premium</h4>
+                    <div class="plan-price">₹99<span>/month</span></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> All Basic features</li>
+                        <li><i class="fas fa-check"></i> Advanced filters</li>
+                        <li><i class="fas fa-check"></i> Exclusive deals</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-times" style="color: #ccc;"></i> Business analytics</li>
+                    </ul>
+                    <button class="plan-btn">Start Trial</button>
+                </div>
+
+                <div class="pricing-card">
+                    <h4 class="plan-name">Enterprise</h4>
+                    <div class="plan-price">Custom<span>/year</span></div>
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> All Premium features</li>
+                        <li><i class="fas fa-check"></i> Business analytics</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                        <li><i class="fas fa-check"></i> SLA guarantee</li>
+                    </ul>
+                    <button class="plan-btn">Contact Us</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="container-lg" style="padding: 0; max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">By The Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Restaurants</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">Happy Users</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">5M+</div>
+                    <div class="stat-label">Reviews</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <div class="container-lg" style="padding: 0; max-width: 800px; margin: 0 auto;">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do I search for restaurants near me?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Simply use the search bar on the home page and enter your location or cuisine preference. You can also use the map view to find restaurants near your current location.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can I book a reservation online?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can book a table directly through our platform. Just select the restaurant, choose your preferred date, time, and party size, and you'll receive an instant confirmation.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Are the reviews authentic?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>All reviews are verified and come from real users who have visited the restaurants. We have strict moderation policies to ensure authenticity and prevent fake reviews.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What if I need customer support?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our customer support team is available 24/7 via email, phone, and live chat. Premium members get priority support with guaranteed response times.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>How do exclusive deals work?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Premium members get access to exclusive discounts and special offers from partner restaurants. These deals are updated regularly and can be applied at checkout.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Is my payment information secure?</span>
+                        <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We use industry-standard SSL encryption and PCI DSS compliance to ensure your payment data is always secure. We never store full credit card details on our servers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2 class="cta-title">Ready to explore amazing restaurants?</h2>
+        <p class="cta-subtitle">Join thousands of food lovers discovering their next favorite dining experience</p>
+        <div class="cta-buttons">
+            <button class="cta-btn primary" onclick="window.location.href='/restaurants'">
+                <i class="fas fa-utensils"></i> Browse Restaurants
+            </button>
+            <% if(user) { %>
+                <button class="cta-btn secondary" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user"></i> View Profile
+                </button>
+            <% } else { %>
+                <button class="cta-btn secondary" onclick="window.location.href='/signup'">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </button>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Restaurant Discovery Modal -->
+<div class="discovery-modal" id="discoveryModal">
+    <div class="discovery-modal-content">
+        <div class="discovery-header">
+            <h2><i class="fas fa-search"></i> Discover Restaurants</h2>
+            <button class="close-btn" onclick="closeDiscoveryModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="discovery-body">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <h3 class="filter-title"><i class="fas fa-filter"></i> Filter & Search</h3>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="searchQuery">Search by Name/Cuisine</label>
+                        <input type="text" id="searchQuery" placeholder="e.g. Biryani, Pizza..." autocomplete="off">
+                    </div>
+                    <div class="filter-group">
+                        <label for="cuisineFilter">Cuisine Type</label>
+                        <select id="cuisineFilter">
+                            <option value="">All Cuisines</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="American">American</option>
+                            <option value="Mexican">Mexican</option>
+                            <option value="Thai">Thai</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="locationFilter">City/Location</label>
+                        <select id="locationFilter">
+                            <option value="">All Locations</option>
+                            <option value="New Delhi">New Delhi</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Kolkata">Kolkata</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="ratingFilter">Minimum Rating</label>
+                        <select id="ratingFilter">
+                            <option value="">All Ratings</option>
+                            <option value="3">3+ Stars</option>
+                            <option value="3.5">3.5+ Stars</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="4.5">4.5+ Stars</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="priceFilter">Price Range</label>
+                        <select id="priceFilter">
+                            <option value="">All Prices</option>
+                            <option value="1">Budget (₹)</option>
+                            <option value="2">Moderate (₹₹)</option>
+                            <option value="3">Premium (₹₹₹)</option>
+                            <option value="4">Luxury (₹₹₹₹)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="search-btn-group">
+                    <button class="search-btn" onclick="searchRestaurants()">
+                        <i class="fas fa-search"></i> Search Restaurants
+                    </button>
+                    <button class="reset-btn" onclick="resetFilters()">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="results-info" id="resultsInfo" style="display: none;"></div>
+                <div class="discovery-results" id="discoveryResults">
+                    <div class="no-results">
                         <i class="fas fa-search"></i>
+                        <p>Enter your search criteria and click "Search Restaurants" to explore</p>
+                        <small>Browse by cuisine, location, rating, and price range</small>
                     </div>
-                    <h3>Restaurant Discovery</h3>
-                    <p>Browse thousands of restaurants across your city. Filter by cuisine, location, price range, and ratings to find your perfect match.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>Ratings & Reviews</h3>
-                    <p>Read authentic reviews from fellow diners. Share your own experience and help others discover great food.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-calendar"></i>
-                    </div>
-                    <h3>Easy Reservations</h3>
-                    <p>Book your table in advance with just a few clicks. Choose your preferred time and date.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-tags"></i>
-                    </div>
-                    <h3>Exclusive Offers</h3>
-                    <p>Get special discounts and exclusive offers from partner restaurants. Save while you dine!</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <h3>24/7 Support</h3>
-                    <p>Our customer support team is available round the clock to help you with any queries.</p>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-map-location-dot"></i>
-                    </div>
-                    <h3>Location Based</h3>
-                    <p>Find restaurants near you instantly. Get directions and contact information easily.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .service-hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 60px 0;
-        text-align: center;
-        margin: -20px -15px 40px -15px;
+<script>
+    // Sample restaurant database
+    const sampleRestaurants = [
+        { id: 1, name: "Taj Indian Kitchen", cuisine: "Indian", location: "New Delhi", rating: 4.8, price: 3, emoji: "🍛" },
+        { id: 2, name: "Pasta Paradise", cuisine: "Italian", location: "Mumbai", rating: 4.6, price: 3, emoji: "🍝" },
+        { id: 3, name: "Dragon's Wok", cuisine: "Chinese", location: "Bangalore", rating: 4.5, price: 2, emoji: "🥢" },
+        { id: 4, name: "Sushi Haven", cuisine: "Japanese", location: "Hyderabad", rating: 4.7, price: 4, emoji: "🍣" },
+        { id: 5, name: "Burger Bliss", cuisine: "American", location: "Pune", rating: 4.4, price: 2, emoji: "🍔" },
+        { id: 6, name: "Spice Route", cuisine: "Indian", location: "Kolkata", rating: 4.9, price: 2, emoji: "🌶️" },
+        { id: 7, name: "Thai Street", cuisine: "Thai", location: "New Delhi", rating: 4.3, price: 2, emoji: "🥘" },
+        { id: 8, name: "Pizza Palace", cuisine: "Italian", location: "Bangalore", rating: 4.5, price: 2, emoji: "🍕" },
+        { id: 9, name: "El Mariachi", cuisine: "Mexican", location: "Mumbai", rating: 4.2, price: 2, emoji: "🌮" },
+        { id: 10, name: "Beijing Express", cuisine: "Chinese", location: "New Delhi", rating: 4.6, price: 2, emoji: "🥡" },
+    ];
+
+    // Open discovery modal
+    function openDiscoveryModal() {
+        document.getElementById('discoveryModal').classList.add('active');
+        loadAllRestaurants();
     }
-    
-    .service-hero h1 {
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 10px;
+
+    // Close discovery modal
+    function closeDiscoveryModal() {
+        document.getElementById('discoveryModal').classList.remove('active');
     }
-    
-    .service-content {
-        padding: 20px 0;
+
+    // Load all restaurants
+    function loadAllRestaurants() {
+        displayRestaurants(sampleRestaurants);
     }
-    
-    .service-card {
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        text-align: center;
-        height: 100%;
+
+    // Search restaurants
+    function searchRestaurants() {
+        const search = document.getElementById('searchQuery').value.toLowerCase();
+        const cuisine = document.getElementById('cuisineFilter').value;
+        const location = document.getElementById('locationFilter').value;
+        const rating = parseFloat(document.getElementById('ratingFilter').value) || 0;
+        const price = parseInt(document.getElementById('priceFilter').value) || 0;
+
+        const results = sampleRestaurants.filter(r => {
+            const matchSearch = search === '' || r.name.toLowerCase().includes(search) || r.cuisine.toLowerCase().includes(search);
+            const matchCuisine = cuisine === '' || r.cuisine === cuisine;
+            const matchLocation = location === '' || r.location === location;
+            const matchRating = rating === 0 || r.rating >= rating;
+            const matchPrice = price === 0 || r.price === price;
+
+            return matchSearch && matchCuisine && matchLocation && matchRating && matchPrice;
+        });
+
+        displayRestaurants(results);
+
+        // Show results info
+        const resultsInfo = document.getElementById('resultsInfo');
+        resultsInfo.style.display = 'block';
+        resultsInfo.innerHTML = `
+            <i class="fas fa-info-circle"></i>
+            Found <strong>${results.length}</strong> restaurant${results.length !== 1 ? 's' : ''} matching your criteria
+        `;
     }
-    
-    .service-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+    // Reset filters
+    function resetFilters() {
+        document.getElementById('searchQuery').value = '';
+        document.getElementById('cuisineFilter').value = '';
+        document.getElementById('locationFilter').value = '';
+        document.getElementById('ratingFilter').value = '';
+        document.getElementById('priceFilter').value = '';
+        document.getElementById('resultsInfo').style.display = 'none';
+        loadAllRestaurants();
     }
-    
-    .service-icon {
-        font-size: 3rem;
-        color: #fe424d;
-        margin-bottom: 20px;
+
+    // Display restaurants
+    function displayRestaurants(restaurants) {
+        const resultsContainer = document.getElementById('discoveryResults');
+
+        if (restaurants.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No restaurants found</p>
+                    <small>Try adjusting your search criteria</small>
+                </div>
+            `;
+            return;
+        }
+
+        resultsContainer.innerHTML = restaurants.map(r => `
+            <div class="discovery-card">
+                <div class="discovery-card-img">
+                    ${r.emoji}
+                    <div class="rating-badge">
+                        <i class="fas fa-star"></i> ${r.rating}
+                    </div>
+                </div>
+                <div class="discovery-card-body">
+                    <h4>${r.name}</h4>
+                    <div class="discovery-card-info">
+                        <div class="discovery-card-info-item">
+                            <i class="fas fa-utensils"></i> ${r.cuisine}
+                        </div>
+                        <div class="discovery-card-info-item">
+                            <i class="fas fa-map-pin"></i> ${r.location}
+                        </div>
+                        <div class="discovery-card-info-item">
+                            <i class="fas fa-rupee-sign"></i> 
+                            ${'₹'.repeat(r.price)}
+                        </div>
+                    </div>
+                    <div class="discovery-card-footer">
+                        <button class="btn-details" onclick="viewRestaurantDetails(${r.id}, '${r.name}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="btn-favorite" onclick="addToFavorites('${r.name}')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
-    
-    .service-card h3 {
-        color: #333;
-        margin-bottom: 15px;
-        font-weight: bold;
+
+    // View restaurant details
+    function viewRestaurantDetails(id, name) {
+        closeDiscoveryModal();
+        setTimeout(() => {
+            window.location.href = `/restaurant-details/${id}`;
+        }, 300);
     }
-    
-    .service-card p {
-        color: #666;
-        line-height: 1.6;
+
+    // Add to favorites
+    function addToFavorites(name) {
+        let favorites = JSON.parse(localStorage.getItem('restaurantFavorites')) || [];
+        if (!favorites.includes(name)) {
+            favorites.push(name);
+            localStorage.setItem('restaurantFavorites', JSON.stringify(favorites));
+            alert(`${name} added to favorites! ❤️`);
+        } else {
+            alert(`${name} is already in your favorites!`);
+        }
     }
-</style>
+
+    // Close modal on background click
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('discoveryModal');
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeDiscoveryModal();
+            }
+        });
+
+        // Allow Enter key to search
+        document.getElementById('searchQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchRestaurants();
+            }
+        });
+    });
+
+    // FAQ Toggle Functionality
+    function toggleFAQ(element) {
+        const faqItem = element.parentElement;
+        const isActive = faqItem.classList.contains('active');
+
+        // Close all other FAQ items
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Toggle current item
+        if (!isActive) {
+            faqItem.classList.add('active');
+        }
+    }
+
+    // Handle other service buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.service-card:not(:first-child) .service-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const card = this.closest('.service-card');
+                const title = card.querySelector('h3').textContent;
+                alert(`Learn more about: ${title}\n\nThis feature is coming soon!`);
+            });
+        });
+
+        // Pricing Plan Click Handler
+        document.querySelectorAll('.plan-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const planName = this.closest('.pricing-card').querySelector('.plan-name').textContent;
+                <% if(user) { %>
+                    alert(`You've selected the ${planName} plan! Processing...`);
+                <% } else { %>
+                    alert('Please sign up first to select a plan');
+                    window.location.href = '/signup';
+                <% } %>
+            });
+        });
+    });
+</script>

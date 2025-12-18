@@ -1,0 +1,363 @@
+<%layout("/layouts/boilerplate") %>
+
+<style>
+    .search-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 0;
+        margin: -20px -15px 40px -15px;
+        color: white;
+    }
+
+    .search-section h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .search-query {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .results-container {
+        padding: 20px 0;
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .results-count {
+        font-size: 1.1rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .results-count span {
+        color: #fe424d;
+        font-weight: bold;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .no-results-icon {
+        font-size: 4rem;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .no-results h2 {
+        color: #333;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .no-results p {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .no-results-suggestions {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: left;
+        display: inline-block;
+    }
+
+    .no-results-suggestions h4 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .no-results-suggestions ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .no-results-suggestions li {
+        padding: 8px 0;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .no-results-suggestions li:hover {
+        color: #667eea;
+        padding-left: 10px;
+    }
+
+    .no-results-suggestions li:before {
+        content: "→ ";
+        color: #fe424d;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    .restaurant-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .restaurant-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    .restaurant-image {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .restaurant-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .restaurant-card:hover .restaurant-image img {
+        transform: scale(1.1);
+    }
+
+    .rating-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #fe424d;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 4px 10px rgba(254, 66, 77, 0.3);
+    }
+
+    .restaurant-content {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .restaurant-content h3 {
+        color: #333;
+        margin: 0 0 15px 0;
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+
+    .restaurant-details {
+        flex-grow: 1;
+        margin-bottom: 15px;
+    }
+
+    .restaurant-details p {
+        margin: 8px 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .restaurant-details p i {
+        color: #fe424d;
+        margin-right: 8px;
+        width: 16px;
+    }
+
+    .cuisine {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .location {
+        color: #999;
+    }
+
+    .description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #777;
+    }
+
+    .restaurant-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .price-range {
+        font-size: 1.1rem;
+        color: #fe424d;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    .btn-danger {
+        background-color: #fe424d;
+        border-color: #fe424d;
+        padding: 6px 15px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .btn-danger:hover {
+        background-color: #e03a41;
+        border-color: #e03a41;
+        text-decoration: none;
+        color: white;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .back-link i {
+        margin-right: 8px;
+    }
+
+    @media (max-width: 600px) {
+        .search-section h1 {
+            font-size: 1.8rem;
+        }
+
+        .search-query {
+            font-size: 0.95rem;
+        }
+
+        .results-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .restaurant-card {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<div class="search-section">
+    <h1>Search Results</h1>
+    <p class="search-query">
+        <% if(searchQuery) { %>
+            Searching for "<%= searchQuery %>"
+        <% } else { %>
+            Enter a search query
+        <% } %>
+    </p>
+</div>
+
+<div class="container results-container">
+    <a href="/restaurants" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to all restaurants
+    </a>
+
+    <% if(searchResults && searchResults.length > 0) { %>
+        <div class="results-header">
+            <div class="results-count">
+                Found <span><%= searchResults.length %></span> result<%= searchResults.length !== 1 ? 's' : '' %>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <% searchResults.forEach(r => { %>
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="restaurant-card">
+                        <div class="restaurant-image">
+                            <img src="<%= r.img %>" alt="<%= r.name %>">
+                            <div class="rating-badge">
+                                <i class="fas fa-star"></i> <%= r.rating %>
+                            </div>
+                        </div>
+                        <div class="restaurant-content">
+                            <h3><%= r.name %></h3>
+                            <div class="restaurant-details">
+                                <p class="cuisine"><i class="fas fa-utensils"></i> <%= r.cuisine %></p>
+                                <p class="location"><i class="fas fa-map-pin"></i> <%= r.city %></p>
+                                <p class="description"><%= r.description %></p>
+                            </div>
+                            <div class="restaurant-footer">
+                                <span class="price-range">
+                                    <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
+                                    <span style="margin-left: 8px; font-weight: 500; color: #666;">
+                                        <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                    </span>
+                                </span>
+                                <a href="/restaurant/<%= r._id %>" class="btn btn-danger">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <div class="no-results">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h2>No Restaurants Found</h2>
+            <p>
+                <% if(searchQuery) { %>
+                    We couldn't find any restaurants matching "<%= searchQuery %>"
+                <% } else { %>
+                    Please enter a search query
+                <% } %>
+            </p>
+
+            <div class="no-results-suggestions">
+                <h4>Try searching for:</h4>
+                <ul>
+                    <li onclick="search('Delhi')">Delhi</li>
+                    <li onclick="search('Mumbai')">Mumbai</li>
+                    <li onclick="search('Bangalore')">Bangalore</li>
+                    <li onclick="search('Hyderabad')">Hyderabad</li>
+                    <li onclick="search('Pune')">Pune</li>
+                    <li onclick="search('Kolkata')">Kolkata</li>
+                </ul>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<script>
+function search(query) {
+    window.location.href = `/search?q=${encodeURIComponent(query)}`;
+}
+</script>
