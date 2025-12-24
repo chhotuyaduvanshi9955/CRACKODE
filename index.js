@@ -2,7 +2,7 @@ const express=require("express");
 const app=express();
 const dotenv=require("dotenv");
 dotenv.config();
-const port=process.env.port;
+const port=process.env.port||3030;
 const path=require("path");// ejs path 
 const ejsMate=require("ejs-mate"); 
 const mongoose=require("mongoose");
@@ -12,18 +12,22 @@ const User=require("./modals/user");
 const Booking=require("./modals/booking");
 const SessionSecret =process.env.SessionSecret;
 // console.log(SessionSecret);
-const MONGO_URL='mongodb://127.0.0.1:27017/restruants';
+// const MONGO_URL='mongodb://127.0.0.1:27017/restruants';
+const MONGO_URL=process.env.MONGO_URL;
 main().then(()=>{         
-    console.log("connected to DB");
+    console.log("connected to MongoDB Atlas");
 })
 .catch((err) =>{ 
-    console.log(err)
+    console.error("Monogo Error:",err.message)
 });
 
 async function main() {    
   await mongoose.connect(MONGO_URL);
 }
 
+mongoose.connection.once("open",()=>{
+    console.log("connected DB name:",mongoose.connection.name);
+})
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());

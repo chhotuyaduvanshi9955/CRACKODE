@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const resturantsData=require("./data.js");
-const Resturants=require("../modals/resturants");
+const Resturants=require("../modals/resturants.js");
+const dotenv=require("dotenv");
+dotenv.config();
 
-
-const MONGO_URL='mongodb://127.0.0.1:27017/resturants';
+const MONGO_URL=process.env.MONGO_URL;
 main().then(()=>{          ///// calling main function 
     console.log("connected to DB");
 })
