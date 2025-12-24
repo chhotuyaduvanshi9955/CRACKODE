@@ -1,6 +1,8 @@
 const express=require("express");
 const app=express();
-let port=3030;
+const dotenv=require("dotenv");
+dotenv.config();
+const port=process.env.port;
 const path=require("path");// ejs path 
 const ejsMate=require("ejs-mate"); 
 const mongoose=require("mongoose");
@@ -8,8 +10,8 @@ const session=require("express-session");
 const Resturants=require("./modals/resturants");
 const User=require("./modals/user");
 const Booking=require("./modals/booking");
-
-
+const SessionSecret =process.env.SessionSecret;
+// console.log(SessionSecret);
 const MONGO_URL='mongodb://127.0.0.1:27017/restruants';
 main().then(()=>{         
     console.log("connected to DB");
@@ -30,7 +32,7 @@ app.use(express.static("public"));
 
 // Session middleware
 app.use(session({
-    secret: 'your-secret-key',
+    secret:SessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: { 
