@@ -10,7 +10,7 @@ const session=require("express-session");
 const Resturants=require("./modals/resturants");
 const User=require("./modals/user");
 const Booking=require("./modals/booking");
-const SessionSecret =process.env.SessionSecret;
+const SessionSecret =process.env.SESSIONSECRET;
 // console.log(SessionSecret);
 // const MONGO_URL='mongodb://127.0.0.1:27017/restruants';
 const MONGO_URL=process.env.MONGO_URL;
@@ -41,6 +41,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: false,
+        httpOnly:true,
         maxAge: 24*60*60*1000 // 24 hours
     }
 }));
